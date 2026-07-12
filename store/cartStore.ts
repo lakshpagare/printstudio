@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 import { Product } from "@/types/product";
 
 export interface CartItem extends Product {
@@ -9,7 +10,10 @@ export interface CartItem extends Product {
 interface CartStore {
   cart: CartItem[];
 
-  addToCart: (product: Product) => void;
+  addToCart: (
+    product: Product,
+    quantity?: number
+  ) => void;
 
   removeFromCart: (id: number) => void;
 
@@ -23,76 +27,78 @@ interface CartStore {
 export const useCartStore = create<CartStore>()(
   persist(
     (set) => ({
-  cart: [],
+      cart: [],
 
-  addToCart: (product) =>
-    set((state) => {
-      const existing = state.cart.find(
-        (item) => item.id === product.id
-      );
+      addToCart: (product, quantity = 1) =>
+        set((state) => {
+          const existing = state.cart.find(
+            (item) => item.id === product.id
+          );
 
-      if (existing) {
-        return {
+          if (existing) {
+            return {
+              cart: state.cart.map((item) =>
+                item.id === product.id
+                  ? {
+                      ...item,
+                      quantity:
+                        item.quantity + quantity,
+                    }
+                  : item
+              ),
+            };
+          }
+
+          return {
+            cart: [
+              ...state.cart,
+              {
+                ...product,
+                quantity,
+              },
+            ],
+          };
+        }),
+
+      removeFromCart: (id) =>
+        set((state) => ({
+          cart: state.cart.filter(
+            (item) => item.id !== id
+          ),
+        })),
+
+      increaseQuantity: (id) =>
+        set((state) => ({
           cart: state.cart.map((item) =>
-            item.id === product.id
+            item.id === id
               ? {
                   ...item,
                   quantity: item.quantity + 1,
                 }
               : item
           ),
-        };
-      }
+        })),
 
-      
-      return {
-        cart: [
-          ...state.cart,
-          {
-            ...product,
-            quantity: 1,
-          },
-        ],
-      };
-    }),
+      decreaseQuantity: (id) =>
+        set((state) => ({
+          cart: state.cart
+            .map((item) =>
+              item.id === id
+                ? {
+                    ...item,
+                    quantity: item.quantity - 1,
+                  }
+                : item
+            )
+            .filter(
+              (item) => item.quantity > 0
+            ),
+        })),
 
-  removeFromCart: (id) =>
-    set((state) => ({
-      cart: state.cart.filter(
-        (item) => item.id !== id
-      ),
-    })),
-
-  increaseQuantity: (id) =>
-    set((state) => ({
-      cart: state.cart.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-            }
-          : item
-      ),
-    })),
-
-  decreaseQuantity: (id) =>
-    set((state) => ({
-      cart: state.cart
-        .map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                quantity: item.quantity - 1,
-              }
-            : item
-        )
-        .filter((item) => item.quantity > 0),
-    })),
-
-  clearCart: () =>
-    set({
-      cart: [],
-    }),
+      clearCart: () =>
+        set({
+          cart: [],
+        }),
     }),
     {
       name: "printstudio-cart",

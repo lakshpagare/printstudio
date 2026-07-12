@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   Heart,
   Eye,
@@ -22,9 +23,10 @@ export default function ProductCard({
 }: ProductCardProps) {
   const [mounted, setMounted] = useState(false);
 
-useEffect(() => {
-  setMounted(true);
-}, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { addToCart } = useCartStore();
 
   const {
@@ -33,7 +35,7 @@ useEffect(() => {
     isInWishlist,
   } = useWishlistStore();
 
- const inWishlist = mounted && isInWishlist(product.id);
+  const inWishlist = mounted && isInWishlist(product.id);
 
   const handleWishlist = () => {
     if (inWishlist) {
@@ -50,11 +52,16 @@ useEffect(() => {
       <div className="relative">
 
         <Link href={`/products/${product.slug}`}>
-          <div className="flex h-64 cursor-pointer items-center justify-center bg-slate-100">
+          <div className="relative h-64 overflow-hidden bg-slate-100">
 
-            <div className="flex h-full w-full items-center justify-center transition duration-300 group-hover:scale-105">
-              <span className="text-6xl">🛍️</span>
-            </div>
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              sizes="(max-width:768px) 100vw, 33vw"
+              // sizes="(max-width:768px)100vw,(max-width:1200px)50vw,25vw"
+              className="object-cover transition duration-500 group-hover:scale-110"
+            />
 
           </div>
         </Link>
@@ -94,19 +101,16 @@ useEffect(() => {
       {/* CONTENT */}
       <div className="p-5">
 
-        {/* Title */}
         <Link href={`/products/${product.slug}`}>
           <h3 className="cursor-pointer text-lg font-semibold transition hover:text-blue-600">
             {product.title}
           </h3>
         </Link>
 
-        {/* Description */}
         <p className="mt-2 line-clamp-2 text-sm text-slate-500">
           {product.description}
         </p>
 
-        {/* Rating */}
         <div className="mt-3 flex items-center gap-2">
           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
 
@@ -119,7 +123,6 @@ useEffect(() => {
           </span>
         </div>
 
-        {/* Price */}
         <div className="mt-4 flex items-center gap-3">
 
           <span className="text-2xl font-bold">
@@ -134,7 +137,6 @@ useEffect(() => {
 
         </div>
 
-        {/* Buttons */}
         <div className="mt-6 flex gap-3">
 
           <Link

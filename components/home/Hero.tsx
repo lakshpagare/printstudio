@@ -3,6 +3,7 @@ import Section from "@/components/common/Section";
 import HeroContent from "./HeroContent";
 import HeroImage from "./HeroImage";
 
+
 export default function Hero() {
   return (
     <Section className="bg-gradient-to-b from-white to-slate-100">

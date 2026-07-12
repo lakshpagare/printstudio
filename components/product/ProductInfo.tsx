@@ -1,86 +1,114 @@
+"use client";
+
 import Link from "next/link";
-import { products } from "@/constants/products";
+import {
+  Heart,
+  ShoppingCart,
+} from "lucide-react";
+
+import { Product } from "@/types/product";
+
+import ProductPrice from "./ProductPrice";
+import ProductRating from "./ProductRating";
+import ProductStock from "./ProductStock";
+import ProductActions from "./ProductActions";
+import ProductColors from "./ProductColors";
+import ProductSizes from "./ProductSizes";
+import ProductBreadcrumb from "./ProductBreadcrumb";
+
+import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 interface Props {
-  slug: string;
+  product: Product;
 }
 
 export default function ProductInfo({
-  slug,
+  product,
 }: Props) {
+  const { addToCart } = useCartStore();
 
-  const product = products.find(
-    (item) => item.slug === slug
-  );
+  const {
+    addToWishlist,
+    removeFromWishlist,
+    isInWishlist,
+  } = useWishlistStore();
 
-  if (!product) {
-
-    return (
-
-      <div>
-
-        Product Not Found
-
-      </div>
-
-    );
-
-  }
+  const inWishlist = isInWishlist(product.id);
 
   return (
-
     <div>
 
-      <h1 className="text-4xl font-bold">
+<ProductBreadcrumb
+  category={product.category}
+  categorySlug={product.categorySlug}
+  title={product.title}
+/>
 
-        {product.title}
-
-      </h1>
-
-      <p className="mt-6 text-slate-600">
-
-        {product.description}
-
+      {/* Category */}
+      <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
+        {product.category}
       </p>
 
-      <div className="mt-8 flex items-center gap-4">
+      {/* Title */}
+      <h1 className="mt-2 text-4xl font-bold text-slate-900">
+        {product.title}
+      </h1>
 
-        <span className="text-4xl font-bold text-blue-600">
+      {/* Rating */}
+      <ProductRating
+        rating={product.rating}
+        reviews={product.reviews}
+      />
 
-          ₹{product.price}
+      {/* Price */}
+      <ProductPrice
+        price={product.price}
+        originalPrice={product.originalPrice}
+      />
 
-        </span>
+      {/* Stock */}
+     <ProductStock stock={product.stock} />
 
-        {product.originalPrice && (
+     <ProductColors
+  colors={product.colors}
+/>
 
-          <span className="text-xl text-slate-400 line-through">
+<ProductSizes
+  sizes={product.sizes}
+/>
 
-            ₹{product.originalPrice}
+      {/* Description */}
+      <p className="mt-8 leading-8 text-slate-600">
+        {product.description}
+      </p>
 
-          </span>
+      {/* Buttons */}
+      <ProductActions product={product} />
 
-        )}
+      {/* Wishlist */}
+      <button
+        onClick={() => {
+          if (inWishlist) {
+            removeFromWishlist(product.id);
+          } else {
+            addToWishlist(product);
+          }
+        }}
+        className="mt-6 flex items-center gap-2 font-medium text-slate-700 transition hover:text-red-500"
+      >
+        <Heart
+          className={`h-5 w-5 ${
+            inWishlist
+              ? "fill-red-500 text-red-500"
+              : ""
+          }`}
+        />
 
-      </div>
-
-      <div className="mt-10 flex gap-4">
-
-        <Link
-          href={`/design-studio?id=${product.id}`}
-          className="rounded-xl bg-blue-600 px-8 py-4 text-white"
-        >
-          Customize Design
-        </Link>
-
-        <button className="rounded-xl border px-8 py-4">
-
-          Add To Cart
-
-        </button>
-
-      </div>
-
+        {inWishlist
+          ? "Remove from Wishlist"
+          : "Add to Wishlist"}
+      </button>
     </div>
-
   );
 }

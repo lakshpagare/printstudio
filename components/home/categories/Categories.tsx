@@ -1,11 +1,11 @@
 import Container from "@/components/common/Container";
+import CategoryCard from "@/components/category/CategoryCard";
+
 import { categories } from "@/constants/categories";
-import CategoryCard from "./CategoryCard";
 
 export default function Categories() {
   return (
     <section className="py-24">
-
       <Container>
 
         <div className="mb-14 text-center">
@@ -32,7 +32,6 @@ export default function Categories() {
         </div>
 
       </Container>
-
     </section>
   );
 }

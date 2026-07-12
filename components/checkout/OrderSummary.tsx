@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
 
-export default function CheckoutSummary() {
+export default function OrderSummary() {
   const { cart } = useCartStore();
 
   const totalItems = cart.reduce(
@@ -16,14 +15,18 @@ export default function CheckoutSummary() {
     0
   );
 
-  const shipping = subtotal > 999 ? 0 : 99;
+  const shipping =
+    subtotal > 999 || subtotal === 0 ? 0 : 99;
 
-  const discount = subtotal > 2000 ? 200 : 0;
+  const discount = 0;
 
-  const total = subtotal + shipping - discount;
+  const tax = Math.round(subtotal * 0.18);
+
+  const total =
+    subtotal + shipping + tax - discount;
 
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
+    <div className="sticky top-24 rounded-3xl border bg-white p-6 shadow-sm">
 
       <h2 className="mb-6 text-2xl font-bold">
         Order Summary
@@ -43,14 +46,25 @@ export default function CheckoutSummary() {
 
         <div className="flex justify-between">
           <span>Shipping</span>
+
           <span>
-            {shipping === 0 ? "Free" : `₹${shipping}`}
+            {shipping === 0
+              ? "Free"
+              : `₹${shipping}`}
           </span>
         </div>
 
-        <div className="flex justify-between text-green-600">
+        <div className="flex justify-between">
+          <span>GST (18%)</span>
+          <span>₹{tax}</span>
+        </div>
+
+        <div className="flex justify-between">
           <span>Discount</span>
-          <span>- ₹{discount}</span>
+
+          <span className="text-green-600">
+            - ₹{discount}
+          </span>
         </div>
 
         <hr />
@@ -62,22 +76,9 @@ export default function CheckoutSummary() {
 
       </div>
 
-      {cart.length === 0 && (
-        <div className="mt-6 text-center">
-
-          <p className="mb-4 text-slate-500">
-            Your cart is empty.
-          </p>
-
-          <Link
-            href="/products"
-            className="rounded-xl bg-blue-600 px-5 py-3 text-white transition hover:bg-blue-700"
-          >
-            Continue Shopping
-          </Link>
-
-        </div>
-      )}
+      <div className="mt-8 rounded-2xl bg-blue-50 p-4 text-sm text-slate-600">
+        🚚 Free shipping on orders above ₹999.
+      </div>
 
     </div>
   );

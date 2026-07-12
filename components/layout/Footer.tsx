@@ -89,17 +89,17 @@ export default function Footer() {
 
               <div className="flex items-center gap-3">
                 <MapPin size={18} />
-                Pune, Maharashtra
+                Nashik , Maharashtra
               </div>
 
               <div className="flex items-center gap-3">
                 <Mail size={18} />
-                support@printstudio.com
+                printstudio@gmail.com
               </div>
 
               <div className="flex items-center gap-3">
                 <Phone size={18} />
-                +91 9876543210
+                +91 7887718763
               </div>
 
             </div>

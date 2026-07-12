@@ -1,0 +1,49 @@
+import Link from "next/link";
+import Container from "@/components/common/Container";
+import { ArrowRight } from "lucide-react";
+
+export default function CTA() {
+  return (
+    <section className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 py-24 text-white">
+      <Container>
+
+        <div className="mx-auto max-w-4xl text-center">
+
+          <span className="rounded-full bg-white/20 px-4 py-2 text-sm font-semibold">
+            Let's Create Together
+          </span>
+
+          <h2 className="mt-6 text-4xl font-bold lg:text-5xl">
+            Ready To Design Your Custom Product?
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-blue-100">
+            Explore our premium collection and start creating
+            personalized products with PrintStudio today.
+          </p>
+
+          <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 font-semibold text-blue-600 transition hover:scale-105"
+            >
+              Explore Products
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+
+            <Link
+              href="/design-studio"
+              className="inline-flex items-center justify-center rounded-xl border border-white px-8 py-4 font-semibold transition hover:bg-white hover:text-blue-600"
+            >
+              Start Designing
+            </Link>
+
+          </div>
+
+        </div>
+
+      </Container>
+    </section>
+  );
+}
